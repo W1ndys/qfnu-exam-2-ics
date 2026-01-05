@@ -1,6 +1,7 @@
 """认证模块 - 处理教务系统登录"""
 
 import base64
+import re
 import requests
 from typing import Tuple, Optional
 
@@ -119,12 +120,57 @@ class QFNUAuth:
     def get_exam_page(self) -> requests.Response:
         """
         获取考试安排页面内容
+        流程：
+        1. GET 请求考试安排查询页，解析获取默认学期
+        2. POST 请求考试安排列表页，获取考试数据
         """
         if not self.session:
             raise RuntimeError("请先完成登录")
 
-        return self.session.get(
-            self.config.exam_url,
+        # 第一步：GET 请求获取默认学期
+        query_response = self.session.get(
+            self.config.exam_query_url,
             headers=self.headers,
             timeout=30
         )
+
+        # 解析 HTML 获取默认学期（查找 select 中被选中的 option）
+        semester = self._parse_default_semester(query_response.text)
+
+        # 第二步：POST 请求获取考试安排数据
+        data = {
+            "xqlbmc": "",
+            "sxxnxq": "",
+            "dqxnxq": "",
+            "ckbz": "",
+            "xnxqid": semester,
+            "xqlb": "",
+        }
+
+        return self.session.post(
+            self.config.exam_list_url,
+            data=data,
+            headers=self.headers,
+            timeout=30
+        )
+
+    def _parse_default_semester(self, html: str) -> str:
+        """
+        从考试安排查询页 HTML 中解析默认学期
+        查找 <select id="xnxqid"> 中被 selected 的 option 的 value
+        """
+        # 使用正则表达式匹配被选中的 option
+        # 匹配模式：<option selected value="2025-2026-1">
+        pattern = r'<option\s+selected\s+value="([^"]+)"'
+        match = re.search(pattern, html)
+        if match:
+            return match.group(1)
+
+        # 备用匹配：<option value="2025-2026-1" selected>
+        pattern_alt = r'<option\s+value="([^"]+)"\s+selected'
+        match_alt = re.search(pattern_alt, html)
+        if match_alt:
+            return match_alt.group(1)
+
+        # 如果都没有匹配到，返回空字符串（让服务器使用默认值）
+        return ""
