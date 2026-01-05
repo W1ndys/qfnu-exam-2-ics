@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>曲阜师范大学期末考试安排导出</title>
+  <meta name="description" content="曲阜师范大学期末考试安排导出为日历文件，便于导入手机日历" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --primary-hover: #4338ca;
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --bg-color: #f3f4f6;
+      --card-bg: #ffffff;
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --border-color: #e5e7eb;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--bg-color);
+      min-height: 100vh;
+      color: var(--text-primary);
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* 头部 */
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .version-tag {
+      display: inline-block;
+      background: var(--primary-color);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-top: 12px;
+    }
+
+    /* 主内容区 */
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    /* 卡片样式 */
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    /* 表单样式 */
+    .form-item {
+      margin-bottom: 20px;
+    }
+
+    .form-item label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .form-item input {
+      width: 100%;
+      height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.2s;
+      background: var(--card-bg);
+    }
+
+    .form-item input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .form-item input::placeholder {
+      color: #9ca3af;
+    }
+
+    /* 验证码行 */
+    .captcha-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .captcha-row .form-item {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    .captcha-img-wrapper {
+      width: 130px;
+      height: 42px;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-color);
+      transition: all 0.2s;
+    }
+
+    .captcha-img-wrapper:hover {
+      border-color: var(--primary-color);
+    }
+
+    .captcha-img-wrapper img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .captcha-img-wrapper .loading-text {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* 按钮样式 */
+    .btn {
+      height: 42px;
+      padding: 0 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      color: white;
+      width: 100%;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-success {
+      background: var(--success-color);
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
+
+    .btn-outline:hover {
+      background: rgba(79, 70, 229, 0.05);
+    }
+
+    /* 错误提示 */
+    .error-message {
+      color: var(--danger-color);
+      font-size: 13px;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* 右侧信息区 */
+    .info-section {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .info-list {
+      list-style: none;
+    }
+
+    .info-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 14px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .info-list li:last-child {
+      border-bottom: none;
+    }
+
+    .info-list li::before {
+      content: '•';
+      color: var(--primary-color);
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .info-list a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    .info-list a:hover {
+      text-decoration: underline;
+    }
+
+    /* 考试结果区域 */
+    .exam-result {
+      grid-column: 1 / -1;
+      display: none;
+    }
+
+    .exam-result.show {
+      display: block;
+    }
+
+    .exam-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .exam-item {
+      padding: 16px;
+      background: var(--bg-color);
+      border-radius: 8px;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .exam-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+
+    .exam-detail {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .exam-detail .label {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    /* Toast 提示 */
+    .toast {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      background: var(--text-primary);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.3s;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Loading 遮罩 */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 9998;
+    }
+
+    .loading-overlay.show {
+      display: flex;
+    }
+
+    .loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--border-color);
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      margin-top: 16px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* 页脚 */
+    .footer {
+      text-align: center;
+      padding: 32px 0 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-exit {
+      margin-top: 16px;
+      padding: 8px 20px;
+      background: transparent;
+      color: var(--danger-color);
+      border: 1px solid var(--danger-color);
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-exit:hover {
+      background: var(--danger-color);
+      color: white;
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      #app {
+        padding: 24px 16px;
+      }
+
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="header">
+      <h1>曲阜师范大学期末考试安排导出</h1>
+      <p>将考试安排导出为日历文件，便于导入手机/电脑日历</p>
+      <span class="version-tag">v3.0.0</span>
+    </div>
+
+    <div class="main-content">
+      <!-- 登录表单 -->
+      <div class="card">
+        <div class="card-title">账号登录</div>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-item">
+            <label for="userAccount">教务系统账号</label>
+            <input type="text" id="userAccount" name="userAccount" placeholder="请输入学号" required />
+          </div>
+          <div class="form-item">
+            <label for="userPassword">教务系统密码</label>
+            <input type="password" id="userPassword" name="userPassword" placeholder="请输入密码" required />
+          </div>
+          <div class="captcha-row">
+            <div class="form-item">
+              <label for="captchaCode">验证码</label>
+              <input type="text" id="captchaCode" name="captchaCode" placeholder="请输入验证码" required />
+            </div>
+            <div class="captcha-img-wrapper" onclick="refreshCaptcha()" title="点击刷新验证码">
+              <span class="loading-text" id="captchaLoading">点击获取</span>
+              <img id="captchaImg" style="display: none;" alt="验证码" />
+            </div>
+          </div>
+          <p class="error-message" id="errorMessage"></p>
+          <button type="submit" class="btn btn-primary" id="submitBtn">获取考试安排</button>
+        </form>
+      </div>
+
+      <!-- 使用说明 -->
+      <div class="info-section">
+        <div class="card">
+          <div class="card-title">使用说明</div>
+          <ul class="info-list">
+            <li>输入教务系统账号密码和验证码即可导出考试安排</li>
+            <li>支持导出为标准日历格式(.ics)，可导入手机日历</li>
+            <li>点击验证码图片可刷新验证码</li>
+            <li>如遇问题可<a href="https://qm.qq.com/q/IeoRba7FmY" target="_blank">联系开发者</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 考试信息展示 -->
+      <div class="card exam-result" id="examResult">
+        <div class="card-title">考试安排</div>
+        <div class="exam-grid" id="examList"></div>
+        <div class="action-buttons">
+          <button class="btn btn-outline" onclick="copyExamInfo()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            复制信息
+          </button>
+          <button class="btn btn-success" onclick="downloadICS()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            下载日历文件
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Powered by <a href="https://www.w1ndys.top" target="_blank">W1ndys</a> | 本工具仅供学习交流使用</p>
+      <button class="btn-exit" onclick="exitApp()" title="关闭程序">退出程序</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Loading -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">正在获取考试安排...</div>
+  </div>
+
+  <script>
+    // 全局变量
+    let examData = null;
+    let icsBlob = null;
+    let currentAccount = '';
+
+    // 页面加载时获取验证码
+    window.onload = function () {
+      refreshCaptcha();
+    };
+
+    // 刷新验证码
+    async function refreshCaptcha() {
+      const img = document.getElementById('captchaImg');
+      const loading = document.getElementById('captchaLoading');
+
+      loading.style.display = 'block';
+      img.style.display = 'none';
+
+      try {
+        const response = await fetch('/api/captcha');
+        if (response.ok) {
+          const blob = await response.blob();
+          img.src = URL.createObjectURL(blob);
+          img.style.display = 'block';
+          loading.style.display = 'none';
+        } else {
+          loading.textContent = '获取失败';
+        }
+      } catch (error) {
+        loading.textContent = '点击重试';
+      }
+    }
+
+    // 显示Toast
+    function showToast(message, duration = 3000) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, duration);
+    }
+
+    // 显示/隐藏Loading
+    function showLoading(show) {
+      const overlay = document.getElementById('loadingOverlay');
+      if (show) {
+        overlay.classList.add('show');
+      } else {
+        overlay.classList.remove('show');
+      }
+    }
+
+    // 显示错误信息
+    function showError(message) {
+      const errorEl = document.getElementById('errorMessage');
+      errorEl.textContent = message;
+      errorEl.classList.add('show');
+    }
+
+    // 隐藏错误信息
+    function hideError() {
+      const errorEl = document.getElementById('errorMessage');
+      errorEl.classList.remove('show');
+    }
+
+    // 处理登录
+    async function handleLogin(event) {
+      event.preventDefault();
+      hideError();
+
+      const userAccount = document.getElementById('userAccount').value;
+      const userPassword = document.getElementById('userPassword').value;
+      const captchaCode = document.getElementById('captchaCode').value;
+
+      if (!userAccount || !userPassword || !captchaCode) {
+        showError('请填写完整信息');
+        return;
+      }
+
+      currentAccount = userAccount;
+      showLoading(true);
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userAccount,
+            userPassword,
+            captchaCode
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showError(data.error || '登录失败，请重试');
+          refreshCaptcha();
+          document.getElementById('captchaCode').value = '';
+          return;
+        }
+
+        // 保存考试数据和ICS文件
+        examData = data.exams;
+        if (data.icsBase64) {
+          const binaryString = atob(data.icsBase64);
+          const bytes = new Uint8Array(binaryString.length);
+          for (let i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+          }
+          icsBlob = new Blob([bytes], { type: 'text/calendar' });
+        }
+
+        // 显示考试信息
+        displayExams(examData);
+        showToast('获取成功！');
+
+      } catch (error) {
+        showError('网络错误，请稍后重试');
+        refreshCaptcha();
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    // 显示考试信息
+    function displayExams(exams) {
+      const examList = document.getElementById('examList');
+      const examResult = document.getElementById('examResult');
+
+      if (!exams || exams.length === 0) {
+        examList.innerHTML = '<div class="exam-item"><div class="exam-name">暂无考试安排</div></div>';
+      } else {
+        examList.innerHTML = exams.map(exam => `
+          <div class="exam-item">
+            <div class="exam-name">${exam.course_name}</div>
+            <div class="exam-detail">
+              <div><span class="label">时间：</span>${exam.exam_time}</div>
+              <div><span class="label">地点：</span>${exam.location}</div>
+              <div><span class="label">座位号：</span>${exam.seat_number}</div>
+              <div><span class="label">教师：</span>${exam.teacher}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      examResult.classList.add('show');
+      examResult.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 下载ICS文件
+    function downloadICS() {
+      if (!icsBlob) {
+        showToast('请先获取考试安排');
+        return;
+      }
+
+      const url = URL.createObjectURL(icsBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `exam_schedule_${currentAccount}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast('下载成功！');
+    }
+
+    // 复制考试信息
+    function copyExamInfo() {
+      if (!examData || examData.length === 0) {
+        showToast('暂无考试信息');
+        return;
+      }
+
+      const text = examData.map(exam =>
+        `${exam.course_name}\n时间：${exam.exam_time}\n地点：${exam.location}\n座位号：${exam.seat_number}\n`
+      ).join('\n');
+
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('已复制到剪贴板');
+      }).catch(() => {
+        showToast('复制失败，请手动复制');
+      });
+    }
+
+    // 退出程序
+    function exitApp() {
+      if (confirm('确定要退出程序吗？')) {
+        fetch('/api/shutdown', { method: 'POST' })
+          .then(() => {
+            document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:18px;color:#6b7280;">程序已关闭，可以关闭此窗口</div>';
+          })
+          .catch(() => {
+            showToast('关闭失败');
+          });
+      }
+    }
+  </script>
+</body>
+
+</html>

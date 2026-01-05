@@ -1,5 +1,20 @@
+# 输出文件
 *.ics
+output/
+
+# 数据文件
 *.txt
+
+# Claude Code
+.claude
+.spec-workflow/
+
+# Nuitka编译输出
+*.build/
+*.dist/
+*.onefile-build/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

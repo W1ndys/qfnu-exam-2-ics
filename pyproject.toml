@@ -1,0 +1,80 @@
+[project]
+name = "qfnu-exam-2-ics"
+version = "3.0.0"
+description = "曲阜师范大学教务系统考试安排导出工具 - 将考试安排导出为ICS日历文件"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "W1ndys", email = "w1ndys@outlook.com" }]
+requires-python = ">=3.9"
+keywords = ["qfnu", "exam", "ics", "calendar", "教务系统", "考试安排"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Utilities",
+]
+
+dependencies = [
+    "requests>=2.28.0",
+    "beautifulsoup4>=4.11.0",
+    "ics>=0.7.0",
+    "pytz>=2022.1",
+    "flask>=2.2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.0.0",
+]
+build = [
+    "nuitka>=2.0.0",
+    "ordered-set>=4.1.0",
+    "zstandard>=0.21.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/W1ndys/qfnu-exam-2-ics"
+Repository = "https://github.com/W1ndys/qfnu-exam-2-ics"
+Issues = "https://github.com/W1ndys/qfnu-exam-2-ics/issues"
+
+[project.scripts]
+qfnu-exam = "qfnu_exam.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/qfnu_exam"]
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311", "py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+]
