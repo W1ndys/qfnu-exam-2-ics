@@ -46,7 +46,6 @@ python -m nuitka \
     --onefile \
     --macos-create-app-bundle \
     --enable-plugin=anti-bloat \
-    --include-data-dir=src/qfnu_exam/web/static=qfnu_exam/web/static \
     --output-dir=dist \
     --output-filename=qfnu-exam-2-ics \
     --macos-app-name="QFNU考试导出" \

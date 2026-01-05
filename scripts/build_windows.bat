@@ -49,7 +49,6 @@ python -m nuitka ^
     --onefile ^
     --windows-console-mode=attach ^
     --enable-plugin=anti-bloat ^
-    --include-data-dir=src/qfnu_exam/web/static=qfnu_exam/web/static ^
     --output-dir=dist ^
     --output-filename=qfnu-exam-2-ics.exe ^
     --company-name="W1ndys" ^
@@ -57,7 +56,7 @@ python -m nuitka ^
     --file-version=3.0.0 ^
     --product-version=3.0.0 ^
     --file-description="QFNU Exam Schedule to ICS Calendar" ^
-    --copyright="Copyright (c) 2024 W1ndys" ^
+    --copyright="Copyright (c) 2026 W1ndys" ^
     src/qfnu_exam/main.py
 
 if %errorlevel% equ 0 (

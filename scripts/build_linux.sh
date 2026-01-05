@@ -45,7 +45,6 @@ python -m nuitka \
     --standalone \
     --onefile \
     --enable-plugin=anti-bloat \
-    --include-data-dir=src/qfnu_exam/web/static=qfnu_exam/web/static \
     --output-dir=dist \
     --output-filename=qfnu-exam-2-ics \
     src/qfnu_exam/main.py
